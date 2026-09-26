@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>StockSense | Receipts</title>
+<title>StockSense | Delivery Orders</title>
 <link rel="icon" href="../assets/images/logo.svg">
 <link rel="stylesheet" href="../assets/css/variables.css">
 <link rel="stylesheet" href="../assets/css/global.css">
@@ -23,8 +23,8 @@
       <a href="dashboard-manager.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
       <a href="#" class="nav-link"><i class="fa-solid fa-box"></i><span>Products</span></a>
       <p class="nav-title">OPERATIONS</p>
-      <a href="receipts.html" class="nav-link active"><i class="fa-solid fa-truck-ramp-box"></i><span>Receipts</span></a>
-      <a href="deliveries.html" class="nav-link"><i class="fa-solid fa-truck"></i><span>Delivery Orders</span></a>
+      <a href="receipts.html" class="nav-link"><i class="fa-solid fa-truck-ramp-box"></i><span>Receipts</span></a>
+      <a href="deliveries.html" class="nav-link active"><i class="fa-solid fa-truck"></i><span>Delivery Orders</span></a>
       <a href="transfers.html" class="nav-link"><i class="fa-solid fa-arrows-left-right"></i><span>Internal Transfers</span></a>
       <a href="#" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Inventory Adjustment</span></a>
       <a href="#" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i><span>Move History</span></a>
@@ -45,7 +45,7 @@
     <header class="topbar">
       <div class="top-left">
         <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
-        <div><h1>Receipts</h1><p>Incoming stock from vendors</p></div>
+        <div><h1>Delivery Orders</h1><p>Outgoing stock for customer shipment</p></div>
       </div>
       <div class="top-actions">
         <button class="icon-btn" id="themeBtn" data-theme-toggle><i class="fa-solid fa-moon"></i></button>
@@ -56,8 +56,8 @@
       <div class="card">
         <div class="card-header">
           <div style="display:flex;align-items:center;gap:14px;">
-            <button class="btn btn-primary" id="newReceiptBtn">+ New</button>
-            <h3 style="margin:0;">Receipts</h3>
+            <button class="btn btn-primary" id="newDeliveryBtn">+ New</button>
+            <h3 style="margin:0;">Delivery</h3>
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <div class="global-search" style="width:220px;">
@@ -75,33 +75,31 @@
           <div class="table-container">
             <table>
               <thead><tr><th>Reference</th><th>From</th><th>To</th><th>Contact</th><th>Schedule date</th><th>Status</th></tr></thead>
-              <tbody id="receiptsBody"></tbody>
+              <tbody id="deliveriesBody"></tbody>
             </table>
           </div>
         </div>
         <div class="kanban" id="kanbanView"></div>
 
-        <div class="table-footer">
-          <span>Reference is auto-generated as &lt;Warehouse&gt;/&lt;Operation&gt;/&lt;ID&gt;. Click a status badge or kanban card to advance it.</span>
-        </div>
+        <div class="table-footer"><span>Pick → pack → validate. Validating decreases stock automatically.</span></div>
       </div>
     </section>
   </main>
 </div>
 
-<!-- New Receipt modal -->
-<div class="modal-overlay" id="newReceiptModal">
+<!-- New Delivery modal -->
+<div class="modal-overlay" id="newDeliveryModal">
   <div class="modal">
-    <div class="modal-header"><h2>New Receipt</h2><button class="modal-close js-modal-close">&#10005;</button></div>
+    <div class="modal-header"><h2>New Delivery</h2><button class="modal-close js-modal-close">&#10005;</button></div>
     <div class="modal-body">
-      <div class="field"><label for="fFrom">From (vendor)</label><input id="fFrom" type="text" placeholder="e.g. Reliance Steel Traders"></div>
-      <div class="field"><label for="fTo">To</label><input id="fTo" type="text" value="WH/Stock1"></div>
-      <div class="field"><label for="fContact">Contact</label><input id="fContact" type="text" placeholder="e.g. Reliance Steel Traders"></div>
-      <div class="field"><label for="fProduct">Product</label><input id="fProduct" type="text" placeholder="e.g. Steel Rods"></div><div class="field"><label for="fQty">Quantity</label><input id="fQty" type="number" min="1" value="1"></div><div class="field"><label for="fDate">Schedule date</label><input id="fDate" type="date"></div>
+      <div class="field"><label for="dFrom">From</label><input id="dFrom" type="text" value="WH/Stock1"></div>
+      <div class="field"><label for="dTo">To (customer)</label><input id="dTo" type="text" placeholder="e.g. Azure Interior"></div>
+      <div class="field"><label for="dContact">Contact</label><input id="dContact" type="text" placeholder="e.g. Azure Interior"></div>
+      <div class="field"><label for="dDate">Schedule date</label><input id="dDate" type="date"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-cancel js-modal-close">Cancel</button>
-      <button class="btn btn-primary" id="saveReceiptBtn">Save</button>
+      <button class="btn btn-primary" id="saveDeliveryBtn">Save</button>
     </div>
   </div>
 </div>
@@ -111,22 +109,20 @@
 <script src="../assets/js/dashboard.js"></script>
 <script src="../assets/js/operations.js"></script>
 <script>
-// Data is loaded from /api/receipts by the shared operations page engine.
-let refCounter = 5;
-const STATUSES = ["draft", "ready", "done"];
-const STATUS_LABEL = { draft: "Draft", ready: "Ready", done: "Done" };
-const receipts = [
-  { ref: "WH/IN/0001", from: "Reliance Steel Traders", to: "WH/Stock1", contact: "Reliance Steel Traders", date: "22/09/2026", status: "done" },
-  { ref: "WH/IN/0002", from: "Bharat Timber Co.", to: "WH/Stock1", contact: "Bharat Timber Co.", date: "24/09/2026", status: "ready" },
-  { ref: "WH/IN/0003", from: "Sundaram Hardware Supplies", to: "WH/Stock2", contact: "Sundaram Hardware Supplies", date: "25/09/2026", status: "ready" },
-  { ref: "WH/IN/0004", from: "Everest Packaging Pvt Ltd", to: "WH/Stock1", contact: "Everest Packaging Pvt Ltd", date: "26/09/2026", status: "draft" },
+// TODO: replace this seed data with GET /api/deliveries once the backend exists.
+let refCounter = 3;
+const STATUSES = ["draft", "waiting", "ready", "done"];
+const STATUS_LABEL = { draft: "Draft", waiting: "Waiting", ready: "Ready", done: "Done" };
+const deliveries = [
+  { ref: "WH/OUT/0001", from: "WH/Stock1", to: "vendor", contact: "Azure Interior", date: "26/09/2026", status: "ready" },
+  { ref: "WH/OUT/0002", from: "WH/Stock1", to: "vendor", contact: "Azure Interior", date: "27/09/2026", status: "ready" },
 ];
 
 const page = initOperationsPage({
-  data: receipts,
+  data: deliveries,
   statuses: STATUSES,
   statusLabel: STATUS_LABEL,
-  tableBodyId: "receiptsBody",
+  tableBodyId: "deliveriesBody",
   kanbanId: "kanbanView",
   listBtnId: "listBtn",
   kanbanBtnId: "kanbanBtn",
@@ -146,22 +142,19 @@ const page = initOperationsPage({
     </div>`,
 });
 
-bindModal("newReceiptModal", "newReceiptBtn", ".js-modal-close");
-document.getElementById("saveReceiptBtn").addEventListener("click", () => {
-  const from = document.getElementById("fFrom").value.trim();
-  const to = document.getElementById("fTo").value.trim();
-  const contact = document.getElementById("fContact").value.trim();
-  const dateRaw = document.getElementById("fDate").value;
-  const product = document.getElementById("fProduct").value.trim(); const qty = Number(document.getElementById("fQty").value);
-  if (!from || !to || !product || !Number.isFinite(qty) || qty <= 0) { alert("Please enter vendor, destination, product, and a positive quantity."); return; }
+bindModal("newDeliveryModal", "newDeliveryBtn", ".js-modal-close");
+document.getElementById("saveDeliveryBtn").addEventListener("click", () => {
+  const from = document.getElementById("dFrom").value.trim();
+  const to = document.getElementById("dTo").value.trim();
+  const contact = document.getElementById("dContact").value.trim();
+  const dateRaw = document.getElementById("dDate").value;
+  if (!from || !to) { alert("Please enter both From and To."); return; }
   const date = dateRaw ? new Date(dateRaw).toLocaleDateString("en-GB") : new Date().toLocaleDateString("en-GB");
-  const ref = `WH/IN/${String(refCounter++).padStart(4, "0")}`;
-  // Persist through the backend before closing the modal.
-  page.addRecord({ ref, from, to, contact, date: dateRaw || new Date().toISOString().slice(0,10), product, qty, status: "draft" }).then(ok => { if (ok) document.getElementById("newReceiptModal").classList.remove("show"); });
+  const ref = `WH/OUT/${String(refCounter++).padStart(4, "0")}`;
+  // TODO: POST /api/deliveries { from, to, contact, date }
+  page.addRecord({ ref, from, to, contact, date, status: "draft" });
+  document.getElementById("newDeliveryModal").classList.remove("show");
 });
 </script>
 </body>
 </html>
-
-
-

@@ -101,15 +101,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-document.addEventListener("DOMContentLoaded", async () => {
-  const api=window.StockSenseApi;
-  if(api && document.querySelector('.kpi-grid')){
-    try{
-      const [k,low,ops]=await Promise.all([api('/dashboard/kpis'),api('/dashboard/low-stock'),api('/dashboard/operations')]);
-      const cards=document.querySelectorAll('.kpi-card h2');
-      [k.total_stock,k.low_stock,k.pending_receipts,k.pending_deliveries,k.scheduled_transfers].forEach((v,i)=>{if(cards[i])cards[i].textContent=Number(v).toLocaleString();});
-      const list=document.querySelector('.stock-list');if(list)list.innerHTML=low.products.map(p=>`<div class="stock-item"><div class="product-icon orange-bg"><i class="fa-solid fa-box"></i></div><div class="product-details"><strong>${p.name}</strong><small>SKU: ${p.sku} · ${p.category}</small></div><div class="stock-number ${Number(p.quantity)===0?'danger':'warning'}">${p.quantity}<small>left</small></div></div>`).join('')||'<p>No low-stock products.</p>';
-      const body=document.querySelector('#operationsTable tbody');if(body)body.innerHTML=ops.operations.map(o=>`<tr><td><strong>${o.ref}</strong></td><td>${o.type}</td><td>${o.product_name||'—'}</td><td>${o.warehouse_name||'—'}</td><td>${o.quantity}</td><td>${o.status}</td><td>${new Date(o.scheduled_date).toLocaleDateString()}</td></tr>`).join('');
-    }catch(e){console.error('Dashboard API:',e.message);}
-  }
-});

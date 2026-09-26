@@ -97,7 +97,7 @@
       <div class="field"><label for="fFrom">From (vendor)</label><input id="fFrom" type="text" placeholder="e.g. Reliance Steel Traders"></div>
       <div class="field"><label for="fTo">To</label><input id="fTo" type="text" value="WH/Stock1"></div>
       <div class="field"><label for="fContact">Contact</label><input id="fContact" type="text" placeholder="e.g. Reliance Steel Traders"></div>
-      <div class="field"><label for="fProduct">Product</label><input id="fProduct" type="text" placeholder="e.g. Steel Rods"></div><div class="field"><label for="fQty">Quantity</label><input id="fQty" type="number" min="1" value="1"></div><div class="field"><label for="fDate">Schedule date</label><input id="fDate" type="date"></div>
+      <div class="field"><label for="fDate">Schedule date</label><input id="fDate" type="date"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-cancel js-modal-close">Cancel</button>
@@ -111,7 +111,7 @@
 <script src="../assets/js/dashboard.js"></script>
 <script src="../assets/js/operations.js"></script>
 <script>
-// Data is loaded from /api/receipts by the shared operations page engine.
+// TODO: replace this seed data with GET /api/receipts once the backend exists.
 let refCounter = 5;
 const STATUSES = ["draft", "ready", "done"];
 const STATUS_LABEL = { draft: "Draft", ready: "Ready", done: "Done" };
@@ -152,16 +152,13 @@ document.getElementById("saveReceiptBtn").addEventListener("click", () => {
   const to = document.getElementById("fTo").value.trim();
   const contact = document.getElementById("fContact").value.trim();
   const dateRaw = document.getElementById("fDate").value;
-  const product = document.getElementById("fProduct").value.trim(); const qty = Number(document.getElementById("fQty").value);
-  if (!from || !to || !product || !Number.isFinite(qty) || qty <= 0) { alert("Please enter vendor, destination, product, and a positive quantity."); return; }
+  if (!from || !to) { alert("Please enter both a vendor (From) and a destination (To)."); return; }
   const date = dateRaw ? new Date(dateRaw).toLocaleDateString("en-GB") : new Date().toLocaleDateString("en-GB");
   const ref = `WH/IN/${String(refCounter++).padStart(4, "0")}`;
-  // Persist through the backend before closing the modal.
-  page.addRecord({ ref, from, to, contact, date: dateRaw || new Date().toISOString().slice(0,10), product, qty, status: "draft" }).then(ok => { if (ok) document.getElementById("newReceiptModal").classList.remove("show"); });
+  // TODO: POST /api/receipts { from, to, contact, date } — then push the response record instead
+  page.addRecord({ ref, from, to, contact, date, status: "draft" });
+  document.getElementById("newReceiptModal").classList.remove("show");
 });
 </script>
 </body>
 </html>
-
-
-
