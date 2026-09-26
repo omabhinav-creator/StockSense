@@ -1,0 +1,63 @@
+/* =========================================================
+   STOCKSENSE — DESIGN TOKENS (Light / Dark)
+   Toggle by setting data-theme="dark" on <html> (see theme.js)
+========================================================= */
+:root{
+  --bg:#F5F8FB;
+  --surface:#FFFFFF;
+  --sidebar:#182B46;
+  --sidebar-2:#243B5A;
+
+  --primary:#7657E8;
+  --blue:#2F8FE8;
+  --pink:#E96A9A;
+  --orange:#F59E3D;
+  --green:#38B878;
+
+  --pastel-purple:#EAE4FF;
+  --pastel-blue:#DDEEFF;
+  --pastel-pink:#FCE1EC;
+  --pastel-orange:#FFF0D9;
+  --pastel-green:#DDF4E8;
+
+  --text:#172033;
+  --muted:#667085;
+  --border:#E4EAF1;
+  --track:#E8EDF3;
+
+  --shadow:0 8px 30px rgba(23,32,51,.06);
+  --shadow-hover:0 12px 35px rgba(23,32,51,.10);
+  --radius:14px;
+
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+
+:root[data-theme="dark"]{
+  --bg:#292A4D;
+  --surface:#34365B;
+  --sidebar:#252743;
+  --sidebar-2:#303154;
+
+  --primary:#B99BEA;
+  --blue:#7CB9F4;
+  --pink:#F18BB5;
+  --orange:#F4D36A;
+  --green:#73D7B0;
+
+  --pastel-purple:#3B3D63;
+  --pastel-blue:#374963;
+  --pastel-pink:#503A4B;
+  --pastel-orange:#514A35;
+  --pastel-green:#354E46;
+
+  --text:#F5F6FA;
+  --muted:#A9ABC4;
+  --border:#46486C;
+  --track:#555775;
+
+  --shadow:0 8px 30px rgba(0,0,0,.15);
+}
+
+*{box-sizing:border-box;}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StockSense | Internal Transfers</title>
+<link rel="icon" href="../assets/images/logo.svg">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-section">
+      <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+      <div class="logo-text"><h2>Stock<span>Sense</span></h2><p>Inventory Management</p></div>
+    </div>
+    <nav class="navigation">
+      <p class="nav-title">MAIN</p>
+      <a href="dashboard-manager.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      <a href="#" class="nav-link"><i class="fa-solid fa-box"></i><span>Products</span></a>
+      <p class="nav-title">OPERATIONS</p>
+      <a href="receipts.html" class="nav-link"><i class="fa-solid fa-truck-ramp-box"></i><span>Receipts</span></a>
+      <a href="deliveries.html" class="nav-link"><i class="fa-solid fa-truck"></i><span>Delivery Orders</span></a>
+      <a href="transfers.html" class="nav-link active"><i class="fa-solid fa-arrows-left-right"></i><span>Internal Transfers</span></a>
+      <a href="#" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Inventory Adjustment</span></a>
+      <a href="#" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i><span>Move History</span></a>
+      <p class="nav-title">SYSTEM</p>
+      <a href="#" class="nav-link"><i class="fa-solid fa-warehouse"></i><span>Warehouses</span></a>
+      <a href="#" class="nav-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="user-card">
+        <div class="avatar js-user-initials">AS</div>
+        <div class="user-info"><strong class="js-user-name">Aishwarya</strong><small class="js-user-role">Inventory Manager</small></div>
+      </div>
+      <a href="#" class="logout js-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+        <div><h1>Internal Transfers</h1><p>Move stock between locations — total stock is unchanged</p></div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" data-theme-toggle><i class="fa-solid fa-moon"></i></button>
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="card">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <button class="btn btn-primary" id="newTransferBtn">+ New</button>
+            <h3 style="margin:0;">Transfers</h3>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <div class="global-search" style="width:220px;">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input id="searchInput" placeholder="Search reference or product">
+            </div>
+            <div class="view-icons">
+              <button class="icon-btn active" id="listBtn" title="List view"><i class="fa-solid fa-bars"></i></button>
+              <button class="icon-btn" id="kanbanBtn" title="Kanban view"><i class="fa-solid fa-table-columns"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="list-view">
+          <div class="table-container">
+            <table>
+              <thead><tr><th>Reference</th><th>Product</th><th>From</th><th>To</th><th>Quantity</th><th>Status</th></tr></thead>
+              <tbody id="transfersBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="kanban" id="kanbanView"></div>
+
+        <div class="table-footer"><span>Every movement here is logged to the ledger. Stock total stays the same; only the location changes.</span></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- New Transfer modal -->
+<div class="modal-overlay" id="newTransferModal">
+  <div class="modal">
+    <div class="modal-header"><h2>New Transfer</h2><button class="modal-close js-modal-close">&#10005;</button></div>
+    <div class="modal-body">
+      <div class="field"><label for="tProduct">Product</label><input id="tProduct" type="text" placeholder="e.g. Steel Rods"></div>
+      <div class="field"><label for="tFrom">From location</label><input id="tFrom" type="text" placeholder="e.g. Main Warehouse"></div>
+      <div class="field"><label for="tTo">To location</label><input id="tTo" type="text" placeholder="e.g. Production Rack"></div>
+      <div class="field"><label for="tQty">Quantity</label><input id="tQty" type="number" placeholder="e.g. 50"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-cancel js-modal-close">Cancel</button>
+      <button class="btn btn-primary" id="saveTransferBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/dashboard.js"></script>
+<script src="../assets/js/operations.js"></script>
+<script>
+// TODO: replace this seed data with GET /api/transfers once the backend exists.
+let refCounter = 46;
+const STATUSES = ["draft", "waiting", "done"];
+const STATUS_LABEL = { draft: "Draft", waiting: "Waiting", done: "Done" };
+const transfers = [
+  { ref: "WH/INT/0045", product: "Micro Controller", from: "Main Warehouse", to: "Production Floor", qty: 50, status: "waiting" },
+  { ref: "WH/INT/0044", product: "Steel Rods", from: "Rack A", to: "Rack B", qty: 100, status: "done" },
+];
+
+const page = initOperationsPage({
+  data: transfers,
+  statuses: STATUSES,
+  statusLabel: STATUS_LABEL,
+  tableBodyId: "transfersBody",
+  kanbanId: "kanbanView",
+  listBtnId: "listBtn",
+  kanbanBtnId: "kanbanBtn",
+  searchInputId: "searchInput",
+  searchMatch: (r, q) => r.ref.toLowerCase().includes(q) || r.product.toLowerCase().includes(q),
+  renderRow: (r) => `
+    <tr>
+      <td class="js-ref" style="color:var(--primary);font-weight:600;">${r.ref}</td>
+      <td>${r.product}</td><td>${r.from}</td><td>${r.to}</td><td class="quantity neutral">${r.qty}</td>
+      <td><span class="status ${r.status}" onclick="page.cycleStatus('${r.ref}')" style="cursor:pointer;">${STATUS_LABEL[r.status]}</span></td>
+    </tr>`,
+  renderCard: (r) => `
+    <div class="kanban-card" onclick="page.cycleStatus('${r.ref}')" title="Click to advance status">
+      <span class="kref">${r.ref}</span>
+      <div class="kmeta">${r.product} &middot; ${r.qty} units</div>
+      <div class="kmeta">${r.from} → ${r.to}</div>
+    </div>`,
+});
+
+bindModal("newTransferModal", "newTransferBtn", ".js-modal-close");
+document.getElementById("saveTransferBtn").addEventListener("click", () => {
+  const product = document.getElementById("tProduct").value.trim();
+  const from = document.getElementById("tFrom").value.trim();
+  const to = document.getElementById("tTo").value.trim();
+  const qty = parseInt(document.getElementById("tQty").value, 10);
+  if (!product || !from || !to || !qty) { alert("Please fill in product, from, to and quantity."); return; }
+  const ref = `WH/INT/${String(refCounter++).padStart(4, "0")}`;
+  // TODO: POST /api/transfers { product, from, to, qty }
+  page.addRecord({ ref, product, from, to, qty, status: "draft" });
+  document.getElementById("newTransferModal").classList.remove("show");
+});
+</script>
+</body>
+</html>

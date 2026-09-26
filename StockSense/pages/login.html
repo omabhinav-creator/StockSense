@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StockSense — Sign in</title>
+<link rel="icon" href="../assets/images/logo.svg">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/auth.css">
+</head>
+<body>
+<button class="theme-toggle" data-theme-toggle>🌙 Dark</button>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="brand-top"><span class="brand-mark">📦</span> StockSense</div>
+    <div class="brand-body">
+      <h1>One ledger for everything that moves.</h1>
+      <p>Receipts, deliveries, transfers and adjustments — tracked in real time, across every warehouse.</p>
+      <div class="flow">
+        <div class="flow-step"><span class="flow-dot" style="background:var(--blue)"></span>Receive 100 kg Steel → stock +100</div>
+        <div class="flow-step"><span class="flow-dot" style="background:var(--orange)"></span>Move to Production Rack → location updated</div>
+        <div class="flow-step"><span class="flow-dot" style="background:var(--pink)"></span>Deliver 20 units → stock −20</div>
+        <div class="flow-step"><span class="flow-dot" style="background:var(--green)"></span>Adjust 3 damaged → logged to ledger</div>
+      </div>
+    </div>
+    <div class="brand-foot">Inventory Management System</div>
+  </div>
+
+  <div class="panel">
+    <div class="card">
+      <div id="authPane">
+        <div class="tabs">
+          <div class="tab active" data-tab="login">Log in</div>
+          <div class="tab" data-tab="register">Create account</div>
+        </div>
+
+        <!-- LOGIN -->
+        <div class="pane active" id="loginPane">
+          <h2>Welcome back</h2>
+          <p class="sub">Log in to your inventory workspace.</p>
+
+          <div class="field">
+            <label>Role</label>
+            <div class="role-group">
+              <div class="role-opt selected" data-role="manager" data-group="login">Inventory Manager</div>
+              <div class="role-opt" data-role="staff" data-group="login">Warehouse Staff</div>
+            </div>
+          </div>
+
+          <div class="field" id="loginEmailField">
+            <label>Email</label>
+            <input type="email" placeholder="you@company.com" id="loginEmail">
+            <div class="err">Enter a valid email address.</div>
+          </div>
+          <div class="field" id="loginPassField">
+            <label>Password</label>
+            <input type="password" placeholder="••••••••" id="loginPass">
+            <div class="err">Password is required.</div>
+          </div>
+
+          <div class="row-between">
+            <label class="checkbox-line"><input type="checkbox"> Keep me signed in</label>
+            <span class="link" data-tab="forgot">Forgot password?</span>
+          </div>
+
+          <button class="primary" id="loginBtn"><span class="label">Log in</span><span class="spin"></span></button>
+          <div class="switch-line">Don't have an account? <span class="link" data-tab="register">Create one</span></div>
+        </div>
+
+        <!-- REGISTER -->
+        <div class="pane" id="registerPane">
+          <h2>Create your account</h2>
+          <p class="sub">Set up access to the inventory dashboard.</p>
+
+          <div class="field" id="regNameField">
+            <label>Full name</label>
+            <input type="text" placeholder="Jordan Reyes" id="regName">
+            <div class="err">Enter your name.</div>
+          </div>
+          <div class="field" id="regEmailField">
+            <label>Work email</label>
+            <input type="email" placeholder="you@company.com" id="regEmail">
+            <div class="err">Enter a valid email address.</div>
+          </div>
+
+          <div class="field">
+            <label>Role</label>
+            <div class="role-group">
+              <div class="role-opt selected" data-role="manager" data-group="register">Inventory Manager</div>
+              <div class="role-opt" data-role="staff" data-group="register">Warehouse Staff</div>
+            </div>
+          </div>
+
+          <div class="field" id="regPassField">
+            <label>Password</label>
+            <input type="password" placeholder="At least 8 characters" id="regPass">
+            <div class="err">Use at least 8 characters.</div>
+          </div>
+          <div class="field" id="regPass2Field">
+            <label>Confirm password</label>
+            <input type="password" placeholder="Repeat password" id="regPass2">
+            <div class="err">Passwords don't match.</div>
+          </div>
+
+          <button class="primary" id="registerBtn"><span class="label">Create account</span><span class="spin"></span></button>
+          <div class="switch-line">Already have an account? <span class="link" data-tab="login">Log in</span></div>
+        </div>
+
+        <!-- FORGOT: request OTP -->
+        <div class="pane" id="forgotPane">
+          <span class="back-link" data-tab="login">← Back to log in</span>
+          <h2>Reset your password</h2>
+          <p class="sub">We'll send a one-time code to your email.</p>
+          <div class="field" id="forgotEmailField">
+            <label>Email</label>
+            <input type="email" placeholder="you@company.com" id="forgotEmail">
+            <div class="err">Enter a valid email address.</div>
+          </div>
+          <button class="primary" id="sendOtpBtn"><span class="label">Send code</span><span class="spin"></span></button>
+        </div>
+
+        <!-- FORGOT: verify OTP -->
+        <div class="pane" id="otpPane">
+          <span class="back-link" data-tab="forgot">← Use a different email</span>
+          <h2>Enter the code</h2>
+          <p class="step-note" id="otpSentTo">We sent a 4-digit code to your email.</p>
+          <div class="otp-boxes">
+            <input maxlength="1" inputmode="numeric">
+            <input maxlength="1" inputmode="numeric">
+            <input maxlength="1" inputmode="numeric">
+            <input maxlength="1" inputmode="numeric">
+          </div>
+          <button class="primary" id="verifyOtpBtn"><span class="label">Verify code</span><span class="spin"></span></button>
+          <div class="switch-line">Didn't get it? <span class="link" id="resendOtp">Resend code</span></div>
+        </div>
+
+        <!-- FORGOT: new password -->
+        <div class="pane" id="newPassPane">
+          <h2>Set a new password</h2>
+          <p class="sub">Choose a new password for your account.</p>
+          <div class="field" id="newPassField">
+            <label>New password</label>
+            <input type="password" placeholder="At least 8 characters" id="newPass">
+            <div class="err">Use at least 8 characters.</div>
+          </div>
+          <div class="field" id="newPass2Field">
+            <label>Confirm new password</label>
+            <input type="password" placeholder="Repeat password" id="newPass2">
+            <div class="err">Passwords don't match.</div>
+          </div>
+          <button class="primary" id="resetPassBtn"><span class="label">Update password</span><span class="spin"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/auth.js"></script>
+</body>
+</html>

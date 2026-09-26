@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StockSense</title>
+<script>
+  (function () {
+    var session = null;
+    try { session = JSON.parse(localStorage.getItem("stocksense_session") || "null"); } catch (e) {}
+    if (session && session.user) {
+      var target = session.user.role === "staff" ? "pages/dashboard-staff.html" : "pages/dashboard-manager.html";
+      window.location.replace(target);
+    } else {
+      window.location.replace("pages/login.html");
+    }
+  })();
+</script>
+</head>
+<body>
+  <noscript>JavaScript is required. <a href="pages/login.html">Go to login</a>.</noscript>
+</body>
+</html>

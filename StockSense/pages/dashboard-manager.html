@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StockSense | Manager Dashboard</title>
+<link rel="icon" href="../assets/images/logo.svg">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/dashboard.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-section">
+      <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+      <div class="logo-text"><h2>Stock<span>Sense</span></h2><p>Inventory Management</p></div>
+    </div>
+
+    <nav class="navigation">
+      <p class="nav-title">MAIN</p>
+      <a href="dashboard-manager.html" class="nav-link active"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      <a href="#" class="nav-link"><i class="fa-solid fa-box"></i><span>Products</span></a>
+
+      <p class="nav-title">OPERATIONS</p>
+      <a href="receipts.html" class="nav-link"><i class="fa-solid fa-truck-ramp-box"></i><span>Receipts</span><span class="badge purple">8</span></a>
+      <a href="deliveries.html" class="nav-link"><i class="fa-solid fa-truck"></i><span>Delivery Orders</span><span class="badge blue">12</span></a>
+      <a href="transfers.html" class="nav-link"><i class="fa-solid fa-arrows-left-right"></i><span>Internal Transfers</span><span class="badge orange">5</span></a>
+      <a href="#" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Inventory Adjustment</span></a>
+      <a href="#" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i><span>Move History</span></a>
+
+      <p class="nav-title">SYSTEM</p>
+      <a href="#" class="nav-link"><i class="fa-solid fa-warehouse"></i><span>Warehouses</span></a>
+      <a href="#" class="nav-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="user-card">
+        <div class="avatar js-user-initials">AS</div>
+        <div class="user-info"><strong class="js-user-name">Aishwarya</strong><small class="js-user-role">Inventory Manager</small></div>
+        <button class="user-menu"><i class="fa-solid fa-ellipsis"></i></button>
+      </div>
+      <a href="#" class="logout js-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+        <div><h1>Dashboard</h1><p>Welcome back! Here's your inventory overview.</p></div>
+      </div>
+      <div class="top-actions">
+        <div class="global-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="searchInput" placeholder="Search products, SKU...">
+          <span>⌘ K</span>
+        </div>
+        <button class="icon-btn notification"><i class="fa-regular fa-bell"></i><span class="notification-dot"></span></button>
+        <button class="icon-btn" id="themeBtn" data-theme-toggle><i class="fa-solid fa-moon"></i></button>
+        <div class="top-profile">
+          <div class="avatar small js-user-initials">AS</div>
+          <div><strong class="js-user-name">Aishwarya</strong><small>Manager</small></div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+      </div>
+    </header>
+
+    <section class="content">
+
+      <div class="filter-bar">
+        <div class="filter-left">
+          <div class="filter-item">
+            <i class="fa-solid fa-warehouse"></i>
+            <select id="warehouseFilter">
+              <option value="all">All Warehouses</option>
+              <option>Main Warehouse</option>
+              <option>Warehouse 1</option>
+              <option>Production Floor</option>
+            </select>
+          </div>
+          <div class="filter-item">
+            <i class="fa-solid fa-layer-group"></i>
+            <select id="categoryFilter">
+              <option value="all">All Categories</option>
+              <option>Electronics</option>
+              <option>Furniture</option>
+              <option>Raw Materials</option>
+            </select>
+          </div>
+          <div class="filter-item">
+            <i class="fa-solid fa-calendar"></i>
+            <select>
+              <option>Last 30 Days</option>
+              <option>Last 7 Days</option>
+              <option>This Month</option>
+              <option>This Year</option>
+            </select>
+          </div>
+        </div>
+        <button class="filter-btn"><i class="fa-solid fa-filter"></i> More Filters</button>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-top"><div class="kpi-icon purple-bg"><i class="fa-solid fa-boxes-stacked"></i></div><span class="trend positive"><i class="fa-solid fa-arrow-up"></i> 8.4%</span></div>
+          <p>Total Products in Stock</p><h2>12,480</h2>
+          <div class="progress"><div class="progress-bar purple-progress" style="width:78%"></div></div>
+          <small>78% of warehouse capacity</small>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-top"><div class="kpi-icon pink-bg"><i class="fa-solid fa-triangle-exclamation"></i></div><span class="trend negative">6 new</span></div>
+          <p>Low / Out of Stock</p><h2>34</h2>
+          <div class="progress"><div class="progress-bar pink-progress" style="width:34%"></div></div>
+          <small>Needs immediate attention</small>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-top"><div class="kpi-icon blue-bg"><i class="fa-solid fa-arrow-down"></i></div><span class="trend positive">+12.2%</span></div>
+          <p>Pending Receipts</p><h2>28</h2>
+          <div class="progress"><div class="progress-bar blue-progress" style="width:55%"></div></div>
+          <small>Expected this week</small>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-top"><div class="kpi-icon orange-bg"><i class="fa-solid fa-truck-fast"></i></div><span class="trend warning">7 urgent</span></div>
+          <p>Pending Deliveries</p><h2>46</h2>
+          <div class="progress"><div class="progress-bar orange-progress" style="width:62%"></div></div>
+          <small>To be dispatched</small>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-top"><div class="kpi-icon green-bg"><i class="fa-solid fa-arrows-left-right"></i></div><span class="trend positive">On track</span></div>
+          <p>Internal Transfers</p><h2>15</h2>
+          <div class="progress"><div class="progress-bar green-progress" style="width:42%"></div></div>
+          <small>Scheduled today</small>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="card activity-card">
+          <div class="card-header">
+            <div><h3>Stock Activity</h3><p>Inventory movement over the last 30 days</p></div>
+            <select class="small-select"><option>Last 30 Days</option><option>Last 7 Days</option><option>This Month</option></select>
+          </div>
+          <div class="chart">
+            <div class="y-axis"><span>12k</span><span>9k</span><span>6k</span><span>3k</span><span>0</span></div>
+            <div class="chart-area">
+              <div class="grid-line line1"></div><div class="grid-line line2"></div><div class="grid-line line3"></div><div class="grid-line line4"></div><div class="grid-line line5"></div>
+              <svg viewBox="0 0 700 260" preserveAspectRatio="none" class="chart-svg">
+                <defs><linearGradient id="purpleGradient" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#7657E8" stop-opacity=".25"/>
+                  <stop offset="100%" stop-color="#7657E8" stop-opacity="0"/>
+                </linearGradient></defs>
+                <path d="M0 210 C50 180 70 195 100 170 C140 135 160 155 200 145 C240 130 250 165 300 125 C340 90 360 125 400 100 C440 72 460 120 500 85 C540 52 570 90 600 65 C630 42 660 70 700 25 L700 260 L0 260 Z" fill="url(#purpleGradient)"/>
+                <path d="M0 210 C50 180 70 195 100 170 C140 135 160 155 200 145 C240 130 250 165 300 125 C340 90 360 125 400 100 C440 72 460 120 500 85 C540 52 570 90 600 65 C630 42 660 70 700 25" fill="none" stroke="#7657E8" stroke-width="4" stroke-linecap="round"/>
+              </svg>
+              <div class="chart-labels"><span>Sep 01</span><span>Sep 07</span><span>Sep 14</span><span>Sep 21</span><span>Sep 26</span></div>
+            </div>
+          </div>
+          <div class="chart-legend">
+            <span><i class="legend-dot purple"></i> Stock In</span>
+            <span><i class="legend-dot blue"></i> Stock Out</span>
+            <span><i class="legend-dot green"></i> Transfers</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div><h3>Low Stock Alerts</h3><p>Products requiring attention</p></div>
+            <button class="view-btn">View All</button>
+          </div>
+          <div class="stock-list">
+            <div class="stock-item">
+              <div class="product-icon purple-bg"><i class="fa-solid fa-microchip"></i></div>
+              <div class="product-details"><strong>Micro Controller</strong><small>SKU: MC-2048</small><div class="stock-progress"><span style="width:18%"></span></div></div>
+              <div class="stock-number danger">18<small>left</small></div>
+            </div>
+            <div class="stock-item">
+              <div class="product-icon orange-bg"><i class="fa-solid fa-cube"></i></div>
+              <div class="product-details"><strong>Steel Rods</strong><small>SKU: SR-1023</small><div class="stock-progress"><span style="width:26%"></span></div></div>
+              <div class="stock-number danger">26<small>kg</small></div>
+            </div>
+            <div class="stock-item">
+              <div class="product-icon pink-bg"><i class="fa-solid fa-chair"></i></div>
+              <div class="product-details"><strong>Office Chairs</strong><small>SKU: CH-3021</small><div class="stock-progress"><span style="width:32%"></span></div></div>
+              <div class="stock-number warning">32<small>left</small></div>
+            </div>
+            <div class="stock-item">
+              <div class="product-icon blue-bg"><i class="fa-solid fa-keyboard"></i></div>
+              <div class="product-details"><strong>Keyboards</strong><small>SKU: KB-8872</small><div class="stock-progress"><span style="width:39%"></span></div></div>
+              <div class="stock-number warning">39<small>left</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card operations-card">
+        <div class="card-header">
+          <div><h3>Recent Operations</h3><p>Latest inventory movements</p></div>
+          <div class="table-actions" style="display:flex;gap:8px;">
+            <button class="btn"><i class="fa-solid fa-filter"></i> Filter</button>
+            <button class="btn btn-primary js-new-operation">+ New Operation</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table id="operationsTable">
+            <thead><tr><th>Reference</th><th>Type</th><th>Product</th><th>Location</th><th>Quantity</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody>
+              <tr><td><strong>WH/IN/0001</strong></td><td><span class="type incoming"><i class="fa-solid fa-arrow-down"></i> Receipt</span></td><td>Steel Rods</td><td>Main Warehouse</td><td class="quantity positive">+100 kg</td><td><span class="status ready">Ready</span></td><td>Sep 26, 2026</td></tr>
+              <tr><td><strong>WH/OUT/0002</strong></td><td><span class="type outgoing"><i class="fa-solid fa-arrow-up"></i> Delivery</span></td><td>Office Chairs</td><td>Main Warehouse</td><td class="quantity negative">-20</td><td><span class="status done">Done</span></td><td>Sep 26, 2026</td></tr>
+              <tr><td><strong>WH/INT/0045</strong></td><td><span class="type transfer"><i class="fa-solid fa-arrows-left-right"></i> Transfer</span></td><td>Micro Controller</td><td>WH → Production</td><td class="quantity neutral">50</td><td><span class="status waiting">Waiting</span></td><td>Sep 25, 2026</td></tr>
+              <tr><td><strong>WH/ADJ/0019</strong></td><td><span class="type adjustment"><i class="fa-solid fa-sliders"></i> Adjustment</span></td><td>Steel Plates</td><td>Warehouse 1</td><td class="quantity negative">-3 kg</td><td><span class="status done">Done</span></td><td>Sep 24, 2026</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span>Showing 4 of 128 operations</span>
+          <div class="pagination">
+            <button disabled><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="page-active">1</button><button>2</button><button>3</button><button>4</button>
+            <button><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</div>
+
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/dashboard.js"></script>
+</body>
+</html>

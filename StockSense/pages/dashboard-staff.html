@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StockSense | Staff Dashboard</title>
+<link rel="icon" href="../assets/images/logo.svg">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/dashboard.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-section">
+      <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+      <div class="logo-text"><h2>Stock<span>Sense</span></h2><p>Inventory Management</p></div>
+    </div>
+
+    <nav class="navigation">
+      <p class="nav-title">MAIN</p>
+      <a href="dashboard-staff.html" class="nav-link active"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+
+      <p class="nav-title">OPERATIONS</p>
+      <a href="receipts.html" class="nav-link"><i class="fa-solid fa-truck-ramp-box"></i><span>Receipts</span><span class="badge purple">6</span></a>
+      <a href="deliveries.html" class="nav-link"><i class="fa-solid fa-truck"></i><span>Delivery Orders</span><span class="badge blue">9</span></a>
+      <a href="transfers.html" class="nav-link"><i class="fa-solid fa-arrows-left-right"></i><span>Internal Transfers</span><span class="badge orange">3</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="user-card">
+        <div class="avatar js-user-initials">WS</div>
+        <div class="user-info"><strong class="js-user-name">Warehouse Staff</strong><small class="js-user-role">Warehouse Staff</small></div>
+        <button class="user-menu"><i class="fa-solid fa-ellipsis"></i></button>
+      </div>
+      <a href="#" class="logout js-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+        <div><h1>Dashboard</h1><p>Here's what needs doing today.</p></div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn notification"><i class="fa-regular fa-bell"></i><span class="notification-dot"></span></button>
+        <button class="icon-btn" id="themeBtn" data-theme-toggle><i class="fa-solid fa-moon"></i></button>
+        <div class="top-profile">
+          <div class="avatar small js-user-initials">WS</div>
+          <div><strong class="js-user-name">Warehouse Staff</strong><small>Staff</small></div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="quick-grid">
+        <div class="quick-card">
+          <h3>Receipts</h3>
+          <p class="quick-sub">Incoming stock waiting to be checked in.</p>
+          <div class="quick-count"><span><b>6</b> to receive</span><span><b>1</b> late</span><span><b>6</b> operations today</span></div>
+          <a href="receipts.html" class="btn btn-primary" style="display:inline-block;text-align:center;text-decoration:none;">Go to Receipts</a>
+        </div>
+        <div class="quick-card">
+          <h3>Delivery</h3>
+          <p class="quick-sub">Outgoing orders ready to pick and pack.</p>
+          <div class="quick-count"><span><b>9</b> to deliver</span><span><b>2</b> waiting</span><span><b>6</b> operations today</span></div>
+          <a href="deliveries.html" class="btn btn-primary" style="display:inline-block;text-align:center;text-decoration:none;">Go to Delivery</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div><h3>Your Recent Moves</h3><p>Operations you've completed or picked up today</p></div>
+        </div>
+        <div class="table-container">
+          <table id="operationsTable">
+            <thead><tr><th>Reference</th><th>Type</th><th>Product</th><th>Location</th><th>Quantity</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><strong>WH/IN/0001</strong></td><td><span class="type incoming"><i class="fa-solid fa-arrow-down"></i> Receipt</span></td><td>Steel Rods</td><td>Main Warehouse</td><td class="quantity positive">+100 kg</td><td><span class="status ready">Ready</span></td></tr>
+              <tr><td><strong>WH/OUT/0002</strong></td><td><span class="type outgoing"><i class="fa-solid fa-arrow-up"></i> Delivery</span></td><td>Office Chairs</td><td>Main Warehouse</td><td class="quantity negative">-20</td><td><span class="status done">Done</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/dashboard.js"></script>
+</body>
+</html>
