@@ -4,8 +4,16 @@
    endpoints marked TODO once the backend is ready.
 ========================================================= */
 
-/* ---------- Session helpers (used by every protected page) ---------- */
-const StockSenseAuth = (function () {
+/* ---------- Session helpers (used by every protected page) ----------
+   IMPORTANT: this must be assigned to `window` explicitly. A top-level
+   `const StockSenseAuth = ...` does NOT become `window.StockSenseAuth`
+   (that's a JS quirk with let/const, unlike var/function). dashboard.js
+   checks `window.StockSenseAuth` before using it, so without this fix
+   that check silently failed on every page — which is why the sidebar
+   user info, search/filter, mobile menu, and the Logout button all
+   appeared "broken": dashboard.js's entire DOMContentLoaded body was
+   bailing out on its very first line. */
+window.StockSenseAuth = (function () {
   const KEY = "stocksense_session";
 
   function save(session) {

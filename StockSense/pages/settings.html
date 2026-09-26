@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StockSense | Settings</title>
+<link rel="icon" href="../assets/images/logo.svg">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-section">
+      <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+      <div class="logo-text"><h2>Stock<span>Sense</span></h2><p>Inventory Management</p></div>
+    </div>
+    <nav class="navigation">
+      <p class="nav-title">MAIN</p>
+      <a href="dashboard-manager.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      <a href="products.html" class="nav-link"><i class="fa-solid fa-box"></i><span>Products</span></a>
+      <p class="nav-title">OPERATIONS</p>
+      <a href="receipts.html" class="nav-link"><i class="fa-solid fa-truck-ramp-box"></i><span>Receipts</span></a>
+      <a href="deliveries.html" class="nav-link"><i class="fa-solid fa-truck"></i><span>Delivery Orders</span></a>
+      <a href="transfers.html" class="nav-link"><i class="fa-solid fa-arrows-left-right"></i><span>Internal Transfers</span></a>
+      <a href="inventory-adjustment.html" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Inventory Adjustment</span></a>
+      <a href="move-history.html" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i><span>Move History</span></a>
+      <p class="nav-title">SYSTEM</p>
+      <a href="warehouses.html" class="nav-link"><i class="fa-solid fa-warehouse"></i><span>Warehouses</span></a>
+      <a href="settings.html" class="nav-link active"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="user-card">
+        <div class="avatar js-user-initials">AS</div>
+        <div class="user-info"><strong class="js-user-name">Aishwarya</strong><small class="js-user-role">Inventory Manager</small></div>
+      </div>
+      <a href="#" class="logout js-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+        <div><h1>Settings</h1><p>Your profile and workspace preferences</p></div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" data-theme-toggle><i class="fa-solid fa-moon"></i></button>
+      </div>
+    </header>
+
+    <section class="content" style="max-width:640px;">
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-header"><div><h3>Profile</h3><p>How your account appears across StockSense</p></div></div>
+        <div class="field"><label for="setName">Full name</label><input id="setName" type="text"></div>
+        <div class="field"><label for="setEmail">Email</label><input id="setEmail" type="email" disabled></div>
+        <div class="field"><label>Role</label><input type="text" id="setRole" disabled></div>
+        <button class="btn btn-primary" id="saveProfileBtn">Save changes</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div><h3>Preferences</h3><p>Defaults applied across your dashboard</p></div></div>
+        <div class="field">
+          <label for="setWarehouse">Default warehouse</label>
+          <select id="setWarehouse"><option>All Warehouses</option><option>Main Warehouse</option><option>Warehouse 1</option></select>
+        </div>
+        <div class="field">
+          <label>Appearance</label>
+          <button class="icon-btn" id="themeBtn2" data-theme-toggle style="width:auto;padding:0 14px;height:38px;"><i class="fa-solid fa-moon"></i> <span style="margin-left:6px;">Toggle theme</span></button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/dashboard.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const session = window.StockSenseAuth ? StockSenseAuth.get() : null;
+  if (session) {
+    document.getElementById("setName").value = session.user.name || "";
+    document.getElementById("setEmail").value = session.user.email || "";
+    document.getElementById("setRole").value = session.user.role === "staff" ? "Warehouse Staff" : "Inventory Manager";
+  }
+  document.getElementById("saveProfileBtn").addEventListener("click", () => {
+    if (!session) return;
+    session.user.name = document.getElementById("setName").value.trim() || session.user.name;
+    // TODO: PATCH /api/users/me { name } once the backend exists
+    StockSenseAuth.save(session);
+    alert("Profile updated.");
+    location.reload();
+  });
+});
+</script>
+</body>
+</html>

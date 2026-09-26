@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StockSense | Products</title>
+<link rel="icon" href="../assets/images/logo.svg">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-section">
+      <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+      <div class="logo-text"><h2>Stock<span>Sense</span></h2><p>Inventory Management</p></div>
+    </div>
+    <nav class="navigation">
+      <p class="nav-title">MAIN</p>
+      <a href="dashboard-manager.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      <a href="products.html" class="nav-link active"><i class="fa-solid fa-box"></i><span>Products</span></a>
+      <p class="nav-title">OPERATIONS</p>
+      <a href="receipts.html" class="nav-link"><i class="fa-solid fa-truck-ramp-box"></i><span>Receipts</span></a>
+      <a href="deliveries.html" class="nav-link"><i class="fa-solid fa-truck"></i><span>Delivery Orders</span></a>
+      <a href="transfers.html" class="nav-link"><i class="fa-solid fa-arrows-left-right"></i><span>Internal Transfers</span></a>
+      <a href="inventory-adjustment.html" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Inventory Adjustment</span></a>
+      <a href="move-history.html" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i><span>Move History</span></a>
+      <p class="nav-title">SYSTEM</p>
+      <a href="warehouses.html" class="nav-link"><i class="fa-solid fa-warehouse"></i><span>Warehouses</span></a>
+      <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="user-card">
+        <div class="avatar js-user-initials">AS</div>
+        <div class="user-info"><strong class="js-user-name">Aishwarya</strong><small class="js-user-role">Inventory Manager</small></div>
+      </div>
+      <a href="#" class="logout js-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+        <div><h1>Products</h1><p>Catalog, stock per location and reordering rules</p></div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" data-theme-toggle><i class="fa-solid fa-moon"></i></button>
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="card">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <button class="btn btn-primary" id="newProductBtn">+ New</button>
+            <h3 style="margin:0;">Products</h3>
+          </div>
+          <div class="global-search" style="width:240px;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="searchInput" placeholder="Search name or SKU">
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>UoM</th><th>On hand</th><th>Free to use</th><th>Reorder point</th></tr></thead>
+            <tbody id="productsBody"></tbody>
+          </table>
+        </div>
+        <div class="table-footer"><span>Stock shown is total across all warehouses. Reorder point below on-hand triggers a Low Stock alert on the dashboard.</span></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- New Product modal -->
+<div class="modal-overlay" id="newProductModal">
+  <div class="modal">
+    <div class="modal-header"><h2>New Product</h2><button class="modal-close js-modal-close">&#10005;</button></div>
+    <div class="modal-body">
+      <div class="field"><label for="pName">Name</label><input id="pName" type="text" placeholder="e.g. Steel Rods"></div>
+      <div class="field"><label for="pSku">SKU / Code</label><input id="pSku" type="text" placeholder="e.g. SR-1023"></div>
+      <div class="field"><label for="pCategory">Category</label>
+        <select id="pCategory">
+          <option>Electronics</option><option>Furniture</option><option>Raw Materials</option><option>Packaging</option>
+        </select>
+      </div>
+      <div class="field"><label for="pUom">Unit of Measure</label>
+        <select id="pUom"><option>Units</option><option>kg</option><option>Boxes</option><option>Litres</option></select>
+      </div>
+      <div class="field"><label for="pInitial">Initial stock (optional)</label><input id="pInitial" type="number" placeholder="0"></div>
+      <div class="field"><label for="pReorder">Reorder point</label><input id="pReorder" type="number" placeholder="e.g. 20"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-cancel js-modal-close">Cancel</button>
+      <button class="btn btn-primary" id="saveProductBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/dashboard.js"></script>
+<script src="../assets/js/operations.js"></script>
+<script>
+// TODO: replace this seed data with GET /api/products once the backend exists.
+const products = [
+  { name: "Steel Rods", sku: "SR-1023", category: "Raw Materials", uom: "kg", onHand: 26, free: 26, reorder: 100 },
+  { name: "Micro Controller", sku: "MC-2048", category: "Electronics", uom: "Units", onHand: 18, free: 12, reorder: 50 },
+  { name: "Office Chairs", sku: "CH-3021", category: "Furniture", uom: "Units", onHand: 32, free: 30, reorder: 40 },
+  { name: "Keyboards", sku: "KB-8872", category: "Electronics", uom: "Units", onHand: 39, free: 39, reorder: 40 },
+];
+
+function renderProducts() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const body = document.getElementById("productsBody");
+  const rows = products.filter((p) => !q || p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q));
+  body.innerHTML = rows.length
+    ? rows.map((p) => {
+        const low = p.onHand <= p.reorder;
+        return `<tr>
+          <td><strong>${p.name}</strong></td>
+          <td>${p.sku}</td>
+          <td>${p.category}</td>
+          <td>${p.uom}</td>
+          <td class="quantity ${low ? "negative" : "positive"}">${p.onHand}${low ? ' <span class="status waiting" style="margin-left:6px;">Low</span>' : ""}</td>
+          <td>${p.free}</td>
+          <td>${p.reorder}</td>
+        </tr>`;
+      }).join("")
+    : `<tr class="empty-row"><td colspan="7">No products match your search.</td></tr>`;
+}
+document.getElementById("searchInput").addEventListener("input", renderProducts);
+renderProducts();
+
+bindModal("newProductModal", "newProductBtn", ".js-modal-close");
+document.getElementById("saveProductBtn").addEventListener("click", () => {
+  const name = document.getElementById("pName").value.trim();
+  const sku = document.getElementById("pSku").value.trim();
+  if (!name || !sku) { alert("Please enter at least a name and SKU."); return; }
+  const category = document.getElementById("pCategory").value;
+  const uom = document.getElementById("pUom").value;
+  const onHand = parseInt(document.getElementById("pInitial").value, 10) || 0;
+  const reorder = parseInt(document.getElementById("pReorder").value, 10) || 0;
+  // TODO: POST /api/products { name, sku, category, uom, onHand, reorder }
+  products.push({ name, sku, category, uom, onHand, free: onHand, reorder });
+  renderProducts();
+  document.getElementById("newProductModal").classList.remove("show");
+});
+</script>
+</body>
+</html>

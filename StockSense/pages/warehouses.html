@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StockSense | Warehouses</title>
+<link rel="icon" href="../assets/images/logo.svg">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-section">
+      <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+      <div class="logo-text"><h2>Stock<span>Sense</span></h2><p>Inventory Management</p></div>
+    </div>
+    <nav class="navigation">
+      <p class="nav-title">MAIN</p>
+      <a href="dashboard-manager.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      <a href="products.html" class="nav-link"><i class="fa-solid fa-box"></i><span>Products</span></a>
+      <p class="nav-title">OPERATIONS</p>
+      <a href="receipts.html" class="nav-link"><i class="fa-solid fa-truck-ramp-box"></i><span>Receipts</span></a>
+      <a href="deliveries.html" class="nav-link"><i class="fa-solid fa-truck"></i><span>Delivery Orders</span></a>
+      <a href="transfers.html" class="nav-link"><i class="fa-solid fa-arrows-left-right"></i><span>Internal Transfers</span></a>
+      <a href="inventory-adjustment.html" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Inventory Adjustment</span></a>
+      <a href="move-history.html" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i><span>Move History</span></a>
+      <p class="nav-title">SYSTEM</p>
+      <a href="warehouses.html" class="nav-link active"><i class="fa-solid fa-warehouse"></i><span>Warehouses</span></a>
+      <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="user-card">
+        <div class="avatar js-user-initials">AS</div>
+        <div class="user-info"><strong class="js-user-name">Aishwarya</strong><small class="js-user-role">Inventory Manager</small></div>
+      </div>
+      <a href="#" class="logout js-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+        <div><h1>Warehouses</h1><p>Warehouses and the locations inside them</p></div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" data-theme-toggle><i class="fa-solid fa-moon"></i></button>
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <button class="btn btn-primary" id="newWarehouseBtn">+ New</button>
+            <h3 style="margin:0;">Warehouses</h3>
+          </div>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Name</th><th>Short Code</th><th>Address</th><th>Locations</th></tr></thead>
+            <tbody id="warehousesBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <button class="btn btn-primary" id="newLocationBtn">+ New</button>
+            <h3 style="margin:0;">Locations</h3>
+          </div>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Name</th><th>Short Code</th><th>Warehouse</th></tr></thead>
+            <tbody id="locationsBody"></tbody>
+          </table>
+        </div>
+        <div class="table-footer"><span>Locations hold the racks, aisles and rooms inside a warehouse — this is what Internal Transfers move stock between.</span></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- New Warehouse modal -->
+<div class="modal-overlay" id="newWarehouseModal">
+  <div class="modal">
+    <div class="modal-header"><h2>Add Warehouse</h2><button class="modal-close js-modal-close">&#10005;</button></div>
+    <div class="modal-body">
+      <div class="field"><label for="whName">Name</label><input id="whName" type="text" placeholder="e.g. Main Warehouse"></div>
+      <div class="field"><label for="whCode">Short Code</label><input id="whCode" type="text" placeholder="e.g. WH-01"></div>
+      <div class="field"><label for="whAddress">Address</label><textarea id="whAddress" placeholder="Street, city, state, PIN code" style="resize:vertical;min-height:70px;"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-cancel js-modal-close">Cancel</button>
+      <button class="btn btn-primary" id="saveWarehouseBtn">Save Warehouse</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Location modal -->
+<div class="modal-overlay" id="newLocationModal">
+  <div class="modal">
+    <div class="modal-header"><h2>Add Location</h2><button class="modal-close js-modal-close">&#10005;</button></div>
+    <div class="modal-body">
+      <div class="field"><label for="locName">Name</label><input id="locName" type="text" placeholder="e.g. Aisle 4, Cold Storage"></div>
+      <div class="field"><label for="locCode">Short Code</label><input id="locCode" type="text" placeholder="e.g. A4-CS"></div>
+      <div class="field"><label for="locWarehouse">Warehouse</label><select id="locWarehouse"></select></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-cancel js-modal-close">Cancel</button>
+      <button class="btn btn-primary" id="saveLocationBtn">Save Location</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/dashboard.js"></script>
+<script src="../assets/js/operations.js"></script>
+<script>
+// TODO: replace with GET /api/warehouses and GET /api/locations once the backend exists.
+const warehouses = [
+  { name: "Main Warehouse", code: "WH-01", address: "Plot 12, Industrial Area, Hyderabad" },
+  { name: "Warehouse 1", code: "WH-02", address: "Sector 5, Logistics Park, Pune" },
+];
+const locations = [
+  { name: "Production Floor", code: "PF-01", warehouse: "Main Warehouse" },
+  { name: "Rack A", code: "RK-A", warehouse: "Main Warehouse" },
+  { name: "Rack B", code: "RK-B", warehouse: "Main Warehouse" },
+];
+
+function renderWarehouses() {
+  document.getElementById("warehousesBody").innerHTML = warehouses.map((w) => {
+    const count = locations.filter((l) => l.warehouse === w.name).length;
+    return `<tr><td><strong>${w.name}</strong></td><td>${w.code}</td><td>${w.address || "&mdash;"}</td><td>${count}</td></tr>`;
+  }).join("") || `<tr class="empty-row"><td colspan="4">No warehouses yet.</td></tr>`;
+
+  const select = document.getElementById("locWarehouse");
+  select.innerHTML = warehouses.map((w) => `<option>${w.name}</option>`).join("");
+}
+function renderLocations() {
+  document.getElementById("locationsBody").innerHTML = locations.map((l) =>
+    `<tr><td><strong>${l.name}</strong></td><td>${l.code}</td><td>${l.warehouse}</td></tr>`
+  ).join("") || `<tr class="empty-row"><td colspan="3">No locations yet.</td></tr>`;
+}
+renderWarehouses();
+renderLocations();
+
+bindModal("newWarehouseModal", "newWarehouseBtn", ".js-modal-close");
+document.getElementById("saveWarehouseBtn").addEventListener("click", () => {
+  const name = document.getElementById("whName").value.trim();
+  const code = document.getElementById("whCode").value.trim();
+  const address = document.getElementById("whAddress").value.trim();
+  if (!name || !code) { alert("Please fill in at least Name and Short Code."); return; }
+  // TODO: POST /api/warehouses { name, code, address }
+  warehouses.push({ name, code, address });
+  renderWarehouses();
+  document.getElementById("whName").value = "";
+  document.getElementById("whCode").value = "";
+  document.getElementById("whAddress").value = "";
+  document.getElementById("newWarehouseModal").classList.remove("show");
+});
+
+bindModal("newLocationModal", "newLocationBtn", ".js-modal-close");
+document.getElementById("saveLocationBtn").addEventListener("click", () => {
+  const name = document.getElementById("locName").value.trim();
+  const code = document.getElementById("locCode").value.trim();
+  const warehouse = document.getElementById("locWarehouse").value;
+  if (!name || !code || !warehouse) { alert("Please fill in Name, Short Code, and Warehouse."); return; }
+  // TODO: POST /api/locations { name, code, warehouse }
+  locations.push({ name, code, warehouse });
+  renderLocations();
+  renderWarehouses();
+  document.getElementById("locName").value = "";
+  document.getElementById("locCode").value = "";
+  document.getElementById("newLocationModal").classList.remove("show");
+});
+</script>
+</body>
+</html>

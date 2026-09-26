@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StockSense | Move History</title>
+<link rel="icon" href="../assets/images/logo.svg">
+<link rel="stylesheet" href="../assets/css/variables.css">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-section">
+      <div class="logo-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+      <div class="logo-text"><h2>Stock<span>Sense</span></h2><p>Inventory Management</p></div>
+    </div>
+    <nav class="navigation">
+      <p class="nav-title">MAIN</p>
+      <a href="dashboard-manager.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      <a href="products.html" class="nav-link"><i class="fa-solid fa-box"></i><span>Products</span></a>
+      <p class="nav-title">OPERATIONS</p>
+      <a href="receipts.html" class="nav-link"><i class="fa-solid fa-truck-ramp-box"></i><span>Receipts</span></a>
+      <a href="deliveries.html" class="nav-link"><i class="fa-solid fa-truck"></i><span>Delivery Orders</span></a>
+      <a href="transfers.html" class="nav-link"><i class="fa-solid fa-arrows-left-right"></i><span>Internal Transfers</span></a>
+      <a href="inventory-adjustment.html" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Inventory Adjustment</span></a>
+      <a href="move-history.html" class="nav-link active"><i class="fa-solid fa-clock-rotate-left"></i><span>Move History</span></a>
+      <p class="nav-title">SYSTEM</p>
+      <a href="warehouses.html" class="nav-link"><i class="fa-solid fa-warehouse"></i><span>Warehouses</span></a>
+      <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="user-card">
+        <div class="avatar js-user-initials">AS</div>
+        <div class="user-info"><strong class="js-user-name">Aishwarya</strong><small class="js-user-role">Inventory Manager</small></div>
+      </div>
+      <a href="#" class="logout js-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+        <div><h1>Move History</h1><p>Every stock movement, in one immutable ledger</p></div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" data-theme-toggle><i class="fa-solid fa-moon"></i></button>
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="filter-bar">
+        <div class="filter-left">
+          <div class="filter-item">
+            <i class="fa-solid fa-filter"></i>
+            <select id="typeFilter">
+              <option value="all">All types</option>
+              <option value="incoming">Receipts</option>
+              <option value="outgoing">Delivery</option>
+              <option value="transfer">Internal Transfer</option>
+              <option value="adjustment">Adjustment</option>
+            </select>
+          </div>
+          <div class="global-search" style="width:220px;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="searchInput" placeholder="Search reference or product">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div><h3>Ledger</h3><p>Late = past schedule date and still not Done. Everything logged here is permanent.</p></div>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Reference</th><th>Type</th><th>Product</th><th>Location</th><th>Quantity</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/dashboard.js"></script>
+<script>
+// TODO: replace with GET /api/move-history once the backend exists — this should be a
+// read-only union of receipts + deliveries + transfers + adjustments, newest first.
+const history = [
+  { ref: "WH/IN/0001", type: "incoming", label: "Receipt", product: "Steel Rods", location: "Main Warehouse", qty: "+100 kg", qtyClass: "positive", status: "ready", date: "2026-09-26" },
+  { ref: "WH/OUT/0002", type: "outgoing", label: "Delivery", product: "Office Chairs", location: "Main Warehouse", qty: "-20", qtyClass: "negative", status: "done", date: "2026-09-26" },
+  { ref: "WH/INT/0045", type: "transfer", label: "Transfer", product: "Micro Controller", location: "WH → Production", qty: "50", qtyClass: "neutral", status: "waiting", date: "2026-09-25" },
+  { ref: "WH/ADJ/0019", type: "adjustment", label: "Adjustment", product: "Steel Plates", location: "Warehouse 1", qty: "-3 kg", qtyClass: "negative", status: "done", date: "2026-09-24" },
+  { ref: "WH/IN/0002", type: "incoming", label: "Receipt", product: "Bharat Timber Co. order", location: "WH/Stock1", qty: "+40", qtyClass: "positive", status: "ready", date: "2026-09-24" },
+];
+
+const typeIcon = { incoming: "fa-arrow-down", outgoing: "fa-arrow-up", transfer: "fa-arrows-left-right", adjustment: "fa-sliders" };
+
+function isLate(entry) {
+  const today = new Date("2026-09-26");
+  return entry.status !== "done" && new Date(entry.date) < today;
+}
+
+function render() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const type = document.getElementById("typeFilter").value;
+  const body = document.getElementById("historyBody");
+  const rows = history.filter((h) => {
+    const matchesType = type === "all" || h.type === type;
+    const matchesQ = !q || h.ref.toLowerCase().includes(q) || h.product.toLowerCase().includes(q);
+    return matchesType && matchesQ;
+  });
+  body.innerHTML = rows.length
+    ? rows.map((h) => `
+      <tr${isLate(h) ? ' style="background:var(--pastel-pink);"' : ""}>
+        <td><strong>${h.ref}</strong></td>
+        <td><span class="type ${h.type}"><i class="fa-solid ${typeIcon[h.type]}"></i> ${h.label}</span></td>
+        <td>${h.product}</td>
+        <td>${h.location}</td>
+        <td class="quantity ${h.qtyClass}">${h.qty}</td>
+        <td><span class="status ${h.status}">${h.status.charAt(0).toUpperCase() + h.status.slice(1)}</span>${isLate(h) ? ' <span class="status draft" style="margin-left:4px;">Late</span>' : ""}</td>
+        <td>${h.date}</td>
+      </tr>`).join("")
+    : `<tr class="empty-row"><td colspan="7">No movements match your filters.</td></tr>`;
+}
+document.getElementById("searchInput").addEventListener("input", render);
+document.getElementById("typeFilter").addEventListener("change", render);
+render();
+</script>
+</body>
+</html>
